@@ -1,10 +1,14 @@
 image:
   repository: ghcr.io/thekoma/rpodder
   tag: 2026.05.1@sha256:254037adb577782f181d4e652bdc32c3b84fd77293282fe64100ba1d01e27af3
-  pullPolicy: IfNotPresent
 securityContext:
   container:
     readOnlyRootFilesystem: false
+cnpg:
+  main:
+    enabled: true
+    database: rpodder
+    user: rpodder
 workload:
   main:
     podSpec:
@@ -12,21 +16,16 @@ workload:
         main:
           probes:
             liveness:
-              type: http
               path: /health
-              port: 3005
             readiness:
-              type: http
               path: /health
-              port: 3005
             startup:
-              type: http
               path: /health
-              port: 3005
           env:
-            RPODDER_DATABASE_URL: sqlite:///app/data/rpodder.db
-            RPODDER_PORT: "3005"
-            RPODDER_MIGRATIONS_DIR: /app/migrations
+            RPODDER_DATABASE_URL:
+              secretKeyRef:
+                name: cnpg-main-urls
+                key: std
             # Registration: open | closed | invite
             RPODDER_REGISTRATION: open
 service:
@@ -35,8 +34,3 @@ service:
       main:
         port: 3005
         protocol: http
-        targetPort: 3005
-persistence:
-  data:
-    enabled: true
-    mountPath: /app/data

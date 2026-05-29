@@ -1,9 +1,7 @@
 annotations:
   artifacthub.io/links: |-
-    - name: source
-      url: https://github.com/thekoma/rpodder
-    - name: documentation
-      url: https://thekoma.github.io/rpodder/
+    - name: support
+    url: https://discord.com/invite/tVsPTHWTtr
   truecharts.org/train: incubator
   trueforge.org/category: media
   trueforge.org/max_helm_version: "4.1"
