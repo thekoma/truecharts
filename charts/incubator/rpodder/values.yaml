@@ -22,12 +22,50 @@ workload:
             startup:
               path: /health
           env:
+            # --- Database ---
+            # Wired automatically to the CNPG cluster created above.
             RPODDER_DATABASE_URL:
               secretKeyRef:
                 name: cnpg-main-urls
                 key: std
-            # Registration: open | closed | invite
+            # Auto-run DB migrations on startup (default: true)
+            # RPODDER_RUN_MIGRATIONS: "true"
+
+            # --- General ---
+            # Registration mode: open (anyone) | closed (admin only) | invite (email confirmation)
             RPODDER_REGISTRATION: open
+            # Public base URL, used in email links and OAuth callbacks (e.g. https://pod.example.com)
+            # RPODDER_BASE_URL: ""
+            # Session lifetime in days (default: 90)
+            # RPODDER_SESSION_DURATION_DAYS: "90"
+
+            # --- SMTP (required for "invite" registration / password reset) ---
+            # RPODDER_SMTP_HOST: smtp.example.com
+            # RPODDER_SMTP_PORT: "25"
+            # RPODDER_SMTP_USER: ""
+            # RPODDER_SMTP_PASSWORD: ""           # prefer secretKeyRef for secrets
+            # RPODDER_SMTP_FROM: rpodder@example.com
+            # SMTP encryption: none | starttls | tls (default: none)
+            # RPODDER_SMTP_SECURITY: none
+
+            # --- OAuth2 / OIDC SSO (e.g. Authentik, Keycloak, Google) ---
+            # RPODDER_OAUTH_ISSUER_URL: https://auth.example.com/application/o/rpodder/
+            # RPODDER_OAUTH_CLIENT_ID: ""
+            # RPODDER_OAUTH_CLIENT_SECRET: ""     # prefer secretKeyRef for secrets
+            # Label shown on the SSO login button (default: SSO)
+            # RPODDER_OAUTH_PROVIDER_NAME: Authentik
+            # OIDC group that grants the admin role (e.g. admins)
+            # RPODDER_OAUTH_ADMIN_GROUP: ""
+
+            # --- Podcast Index API (optional, free key from podcastindex.org) ---
+            # Enables podcast search/discovery in the directory.
+            # RPODDER_PODCASTINDEX_KEY: ""
+            # RPODDER_PODCASTINDEX_SECRET: ""     # prefer secretKeyRef for secrets
+
+            # --- Metrics (Prometheus) ---
+            # Enable a dedicated metrics server (default: false)
+            # RPODDER_METRICS_ENABLED: "false"
+            # RPODDER_METRICS_PORT: "9091"
 service:
   main:
     ports:
